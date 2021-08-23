@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.mydataharbor</groupId>
+    <artifactId>mydataharbor-plugin</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>mydataharbor-jdbc</artifactId>
+  <packaging>pom</packaging>
+  <description>jdbc数据源</description>
+  <version>1.1.0</version>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <modules>
+
+    <module>mydataharbor-source-jdbc</module>
+    <module>mydataharbor-sink-jdbc</module>
+    <module>mydataharbor-jdbc-plugin</module>
+  </modules>
+
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-clients</artifactId>
+        <version>2.6.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>5.3.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>2.9.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+</project>
