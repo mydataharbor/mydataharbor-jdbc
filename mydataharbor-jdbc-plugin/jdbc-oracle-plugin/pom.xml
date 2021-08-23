@@ -8,7 +8,7 @@
   </parent>
   <artifactId>jdbc-oracle-plugin</artifactId>
   <packaging>pom</packaging>
-  <description>oracle jdbc 数据源插件</description>
+  <description>oracle jdbc 插件</description>
   <properties>
     <plugin.group>jdbc-oracle</plugin.group>
     <plugin.group.logo>data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 231 30'
