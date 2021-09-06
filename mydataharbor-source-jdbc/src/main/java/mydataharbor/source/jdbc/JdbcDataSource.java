@@ -14,6 +14,9 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -37,7 +40,7 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
 
   private JdbcDataSourceConfig jdbcDataSourceConfig;
 
-  private SqlRowSet preSqlRowSet;
+  private ResultSet preResultSet;
 
   /**
    * 全量拉取是否已经ok
@@ -160,50 +163,79 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
     }
   }
 
+  private void sleep(long time) {
+    try {
+      Thread.sleep(time);
+    } catch (InterruptedException e) {
+      log.warn("线程睡眠被打断！", e);
+    }
+  }
+
   @Override
   public Collection<JdbcResult> doPoll(BaseSettingContext settingContext) throws TheEndException {
     if (!tmp.isEmpty()) {
       return tmp;
     }
-    SqlRowSet rowSet = null;
+    ResultSet resultSet = null;
     switch (jdbcDataSourceConfig.getModel()) {
       case COMPLETE:
         if (completePollOk) {
           throw new TheEndException("迁移结束");
         }
-        if (preSqlRowSet == null) {
-          preSqlRowSet = jdbcTemplate.queryForRowSet(jdbcDataSourceConfig.getQuerySql());
+        if (preResultSet == null) {
+          preResultSet = queryForResultSet(jdbcDataSourceConfig.getQuerySql());
         }
-        rowSet = preSqlRowSet;
+        resultSet = preResultSet;
         break;
       case INCREMENT:
-        if (preSqlRowSet == null || nowRowSetEmpty) {
-          preSqlRowSet = jdbcTemplate.queryForRowSet(getIncreaseSql(), lastTime, getNowTime());
+        if (preResultSet == null || nowRowSetEmpty) {
+          sleep(jdbcDataSourceConfig.getSleepTimeOnIncrement());//防止一直空转，查询数据库
+          preResultSet = queryForResultSet(getIncreaseSql(), lastTime, getNowTime());
         }
-        rowSet = preSqlRowSet;
+
+        resultSet = preResultSet;
         break;
       case INCREMENT_AFTER_COMPLETE:
         if (!completePollOk) {
-          if (preSqlRowSet == null) {
-            preSqlRowSet = jdbcTemplate.queryForRowSet(jdbcDataSourceConfig.getQuerySql());
+          if (preResultSet == null) {
+            preResultSet = queryForResultSet(jdbcDataSourceConfig.getQuerySql());
           }
-          rowSet = preSqlRowSet;
+          resultSet = preResultSet;
         } else {
           //增量
-          if (preSqlRowSet == null || nowRowSetEmpty) {
-            preSqlRowSet = jdbcTemplate.queryForRowSet(getIncreaseSql(), lastTime, getNowTime());
+          if (preResultSet == null || nowRowSetEmpty) {
+            sleep(jdbcDataSourceConfig.getSleepTimeOnIncrement());//防止一直空转，查询数据库
+            preResultSet = queryForResultSet(getIncreaseSql(), lastTime, getNowTime());
           }
-          rowSet = preSqlRowSet;
+          resultSet = preResultSet;
         }
         break;
     }
-    tmp = getResults(rowSet);
+    try {
+      tmp = getResults(resultSet);
+    } catch (SQLException throwables) {
+      throw new RuntimeException("抽取数据发生异常：" + throwables.getMessage(), throwables);
+    }
     isFirstPoll = false;
     return tmp;
   }
 
+  private ResultSet queryForResultSet(String querySql, Object... args) {
+    try {
+      PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(querySql);
+      if (args != null) {
+        for (int i = 0; i < args.length; i++) {
+          preparedStatement.setObject(i + 1, args[i]);
+        }
+      }
+      return preparedStatement.executeQuery();
+    } catch (SQLException throwables) {
+      throw new RuntimeException("无法获取jdbc连接：" + throwables.getMessage(), throwables);
+    }
+  }
+
   public Object getLastTime() {
-    //TODO 这里这个时间要先从永久存储取，如果没有使用配置
+    //TODO 这里这个时间要先从永久存储取，如果没有，使用配置
     return jdbcDataSourceConfig.getStartTime();
   }
 
@@ -224,11 +256,15 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
     return false;
   }
 
-  private List<JdbcResult> getResults(SqlRowSet resultSet) {
+
+  private List<JdbcResult> getResults(ResultSet resultSet) throws SQLException {
     List<JdbcResult> result = new CopyOnWriteArrayList<>();
     int count = 0;
-    SqlRowSetMetaData metaData = resultSet.getMetaData();
-    String[] columnNames = metaData.getColumnNames();
+    ResultSetMetaData metaData = resultSet.getMetaData();
+    String[] columnNames = new String[metaData.getColumnCount()];
+    for (int i = 1; i <= metaData.getColumnCount(); i++) {
+      columnNames[i - 1] = metaData.getColumnLabel(i);
+    }
     while (count < jdbcDataSourceConfig.getMaxPollRecords()) {
       if (resultSet.next()) {
         JdbcResult row = new JdbcResult();
@@ -306,7 +342,7 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
 
   @Override
   public void rollback(JdbcResult record, BaseSettingContext settingContext) {
-
+    //什么事都不用做
   }
 
   @Override

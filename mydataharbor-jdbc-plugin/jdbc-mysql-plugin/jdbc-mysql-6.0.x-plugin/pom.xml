@@ -9,8 +9,6 @@
 	</parent>
 	<artifactId>jdbc-mysql-6.0.x-plugin</artifactId>
 
-	<description>mysql-6.0.x数据源</description>
-
 	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 	<dependencies>
 		<dependency>

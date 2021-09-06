@@ -49,4 +49,6 @@ public class JdbcDataSourceConfig extends RateLimitConfig {
   @MyDataHarborMarker(title = "主键列", des = "传递给下游，能唯一标识数据库中记录的唯一性，支持联合主键")
   private List<String> primaryKeys;
 
+  @MyDataHarborMarker(title = "每次增量的休息时间",des = "涉及增量拉取的情况下生效，防止没有数据空转，默认500ms！",defaultValue = "500")
+  private Long sleepTimeOnIncrement = 500L;
 }

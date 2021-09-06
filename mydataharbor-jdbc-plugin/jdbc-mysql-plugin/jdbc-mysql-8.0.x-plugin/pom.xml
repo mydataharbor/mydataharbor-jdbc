@@ -7,8 +7,6 @@
   </parent>
   <artifactId>jdbc-mysql-8.0.x-plugin</artifactId>
 
-  <description>mysql-8.0.x数据源</description>
-
   <dependencies>
     <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
     <dependency>

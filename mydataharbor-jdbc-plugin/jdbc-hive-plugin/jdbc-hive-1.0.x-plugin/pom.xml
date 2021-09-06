@@ -8,8 +8,6 @@
 		<version>1.1.0</version>
 	</parent>
 	<artifactId>jdbc-hive-1.0.x-plugin</artifactId>
-	<description>hive 1.0.x 插件</description>
-
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.apache.hive/hive-jdbc -->
 		<dependency>

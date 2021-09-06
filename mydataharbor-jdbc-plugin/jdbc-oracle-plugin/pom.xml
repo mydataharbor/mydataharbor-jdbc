@@ -8,7 +8,7 @@
   </parent>
   <artifactId>jdbc-oracle-plugin</artifactId>
   <packaging>pom</packaging>
-  <description>oracle jdbc 插件</description>
+  <description>oracle-jdbc，该插件让使用者可以从oracle数据库抽取数据，或者将数据写入oracle数据库。 jdbc抽取数据有三种模式，全量/增量/先全量再增量 ，❗ 此种方式无法同步删除的数据。</description>
   <properties>
     <plugin.group>jdbc-oracle</plugin.group>
     <plugin.group.logo>data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 231 30'
