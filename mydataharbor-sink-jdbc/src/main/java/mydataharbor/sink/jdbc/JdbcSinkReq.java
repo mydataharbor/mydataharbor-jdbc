@@ -38,7 +38,7 @@ public class JdbcSinkReq {
     /**
      * 更新模式
      */
-    private WriteModel writeModel = WriteModel.UPSET;
+    private WriteModel writeModel = WriteModel.SAVE;
   }
 
 

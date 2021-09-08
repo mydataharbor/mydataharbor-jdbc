@@ -152,7 +152,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
             int deleteUpdate = jdbcTemplate.update(sql.toString(), whereValues);
             result.add(deleteUpdate);
             break;
-          case UPSET:
+          case SAVE:
             sql.append("UPDATE ");
             sql.append(writeDataInfo.getTableName());
             sql.append(" SET ");
