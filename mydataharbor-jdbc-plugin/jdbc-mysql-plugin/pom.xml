@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>mydataharbor-jdbc-plugin</artifactId>
 		<groupId>com.mydataharbor</groupId>
-		<version>1.1.0</version>
+		<version>1.1.1-beta.1</version>
 	</parent>
 	<artifactId>jdbc-mysql-plugin</artifactId>
 	<packaging>pom</packaging>
