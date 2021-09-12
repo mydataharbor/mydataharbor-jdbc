@@ -269,7 +269,14 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
     while (count < jdbcDataSourceConfig.getMaxPollRecords()) {
       if (resultSet.next()) {
         JdbcResult row = new JdbcResult();
-        row.setJdbcSyncModel(jdbcDataSourceConfig.getModel());
+        if (jdbcDataSourceConfig.getModel().equals(JdbcSyncModel.INCREMENT_AFTER_COMPLETE)) {
+          if (completePollOk)
+            row.setJdbcSyncModel(JdbcSyncModel.INCREMENT);
+          else
+            row.setJdbcSyncModel(JdbcSyncModel.COMPLETE);
+        } else {
+          row.setJdbcSyncModel(jdbcDataSourceConfig.getModel());
+        }
         try {
           row.setPosition(resultSet.getRow());
         } catch (Exception e) {

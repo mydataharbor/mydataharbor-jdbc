@@ -90,20 +90,23 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
   public WriterResult write(JdbcSinkReq record, BaseSettingContext settingContext) throws ResetException {
     TransactionDefinition definition = new DefaultTransactionDefinition();
     TransactionStatus status = dataSourceTransactionManager.getTransaction(definition);
-    List<Integer> result;
     try {
-      result = process(record);
+      Map<String, List<Object[]>> stringListMap = process(record);
+      for (String sql : stringListMap.keySet()) {
+        jdbcTemplate.batchUpdate(sql, stringListMap.get(sql));
+      }
       dataSourceTransactionManager.commit(status);
     } catch (Exception e) {
       log.error("写入数据时发生异常", e);
       dataSourceTransactionManager.rollback(status);
       throw new ResetException("写入数据时发生异常：" + e.getMessage());
     }
-    return WriterResult.builder().success(true).commit(true).msg("写入成功").writeReturn(result).build();
+    return WriterResult.builder().success(true).commit(true).msg("写入成功").build();
   }
 
-  private List<Integer> process(JdbcSinkReq record) throws Exception {
+  private Map<String, List<Object[]>> process(JdbcSinkReq record) {
     List<Integer> result = new ArrayList<>();
+    Map<String, List<Object[]>> res = new HashMap<>();
     try {
       for (JdbcSinkReq.WriteDataInfo writeDataInfo : record.getWriteDataInfos()) {
         Map<String, Object> data = writeDataInfo.getData();
@@ -121,6 +124,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
           whereValues = writeDataInfo.getWhere().values().stream().toArray();
         }
         StringBuilder sql = new StringBuilder();
+        Object[] executeValues = null;
         switch (writeDataInfo.getWriteModel()) {
           case INSERT:
             sql.append("INSERT INTO ");
@@ -129,8 +133,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
             sql.append(insertColumnNames);
             sql.append(" VALUES ");
             sql.append(valuePlaceholder);
-            int insertUpdate = jdbcTemplate.update(sql.toString(), values);
-            result.add(insertUpdate);
+            executeValues = values;
             break;
           case UPDATE:
             sql.append("UPDATE ");
@@ -140,8 +143,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
             if (whereValues.length > 0) {
               sql.append(whereSql.toString());
             }
-            int update = jdbcTemplate.update(sql.toString(), concat(values, whereValues));
-            result.add(update);
+            executeValues = concat(values, whereValues);
             break;
           case DELETE:
             sql.append("DELETE FROM ");
@@ -149,8 +151,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
             if (whereValues.length > 0) {
               sql.append(whereSql.toString());
             }
-            int deleteUpdate = jdbcTemplate.update(sql.toString(), whereValues);
-            result.add(deleteUpdate);
+            executeValues = whereValues;
             break;
           case SAVE:
             sql.append("UPDATE ");
@@ -169,34 +170,52 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
               sql.append(insertColumnNames);
               sql.append(" VALUES ");
               sql.append(valuePlaceholder);
-              upset = jdbcTemplate.update(sql.toString(), values);
+              executeValues = values;
             }
-            result.add(upset);
             break;
+        }
+        if (executeValues != null) {
+          List<Object[]> list = res.get(sql.toString());
+          if (list == null) {
+            list = new ArrayList<>();
+            res.put(sql.toString(), list);
+          }
+          list.add(executeValues);
         }
       }
     } catch (Exception e) {
       log.error("写入数据时发生异常", e);
       throw e;
     }
-    return result;
+    return res;
   }
 
   @Override
   public WriterResult write(List<JdbcSinkReq> records, BaseSettingContext settingContext) throws ResetException {
     List<List<Integer>> result = new ArrayList<>();
+    Map<String, List<Object[]>> toWrite = new HashMap<>();
     for (JdbcSinkReq record : records) {
-      TransactionDefinition definition = new DefaultTransactionDefinition();
-      TransactionStatus status = dataSourceTransactionManager.getTransaction(definition);
-      try {
-        List<Integer> recodResult = process(record);
-        result.add(recodResult);
-        dataSourceTransactionManager.commit(status);
-      } catch (Exception e) {
-        log.error("写入数据时发生异常", e);
-        dataSourceTransactionManager.rollback(status);
-        throw new ResetException("写入数据时发生异常：" + e.getMessage());
+      Map<String, List<Object[]>> stringListMap = process(record);
+      for (Map.Entry<String, List<Object[]>> stringListEntry : stringListMap.entrySet()) {
+        List<Object[]> list = toWrite.get(stringListEntry.getKey());
+        if (list == null) {
+          toWrite.put(stringListEntry.getKey(), stringListEntry.getValue());
+        } else {
+          list.addAll(stringListEntry.getValue());
+        }
       }
+    }
+    TransactionDefinition definition = new DefaultTransactionDefinition();
+    TransactionStatus status = dataSourceTransactionManager.getTransaction(definition);
+    try {
+      for (String sql : toWrite.keySet()) {
+        jdbcTemplate.batchUpdate(sql, toWrite.get(sql));
+      }
+      dataSourceTransactionManager.commit(status);
+    } catch (Exception e) {
+      log.error("写入数据时发生异常", e);
+      dataSourceTransactionManager.rollback(status);
+      throw new ResetException("写入数据时发生异常：" + e.getMessage());
     }
     return WriterResult.builder().success(true).commit(true).msg("ok").writeReturn(result).build();
   }
