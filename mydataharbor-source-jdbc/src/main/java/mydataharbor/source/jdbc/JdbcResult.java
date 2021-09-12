@@ -19,7 +19,7 @@ public class JdbcResult {
   private int position;
 
   /**
-   * 当前消息是哪个模式下产生的数据
+   * 当前消息是哪个模式下产生的数据,INCREMENT 或者 COMPLETE
    */
   private JdbcSyncModel jdbcSyncModel;
 

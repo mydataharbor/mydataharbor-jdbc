@@ -14,10 +14,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -35,6 +32,8 @@ import static mydataharbor.source.jdbc.config.JdbcDataSourceConfig.SECOND;
 public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcResult, BaseSettingContext> {
 
   private BasicDataSource dataSource;
+
+  private Connection connection;
 
   private JdbcTemplate jdbcTemplate;
 
@@ -86,6 +85,7 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
       dataSource = BasicDataSourceFactory
         .createDataSource(connectionProps);
       dataSource.start();
+      connection = dataSource.getConnection();
     } catch (Exception e) {
       throw new DataSourceCreateException("创建jdbc数据源失败！:" + e.getMessage(), e);
     }
@@ -192,7 +192,6 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
           sleep(jdbcDataSourceConfig.getSleepTimeOnIncrement());//防止一直空转，查询数据库
           preResultSet = queryForResultSet(getIncreaseSql(), lastTime, getNowTime());
         }
-
         resultSet = preResultSet;
         break;
       case INCREMENT_AFTER_COMPLETE:
@@ -222,7 +221,9 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
 
   private ResultSet queryForResultSet(String querySql, Object... args) {
     try {
-      PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(querySql);
+      //每次都换一个连接
+      connection = dataSource.getConnection();
+      PreparedStatement preparedStatement = connection.prepareStatement(querySql);
       if (args != null) {
         for (int i = 0; i < args.length; i++) {
           preparedStatement.setObject(i + 1, args[i]);
@@ -268,8 +269,19 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
     while (count < jdbcDataSourceConfig.getMaxPollRecords()) {
       if (resultSet.next()) {
         JdbcResult row = new JdbcResult();
-        row.setJdbcSyncModel(jdbcDataSourceConfig.getModel());
-        row.setPosition(resultSet.getRow());
+        if (jdbcDataSourceConfig.getModel().equals(JdbcSyncModel.INCREMENT_AFTER_COMPLETE)) {
+          if (completePollOk)
+            row.setJdbcSyncModel(JdbcSyncModel.INCREMENT);
+          else
+            row.setJdbcSyncModel(JdbcSyncModel.COMPLETE);
+        } else {
+          row.setJdbcSyncModel(jdbcDataSourceConfig.getModel());
+        }
+        try {
+          row.setPosition(resultSet.getRow());
+        } catch (Exception e) {
+          //有的jdbc厂商没有实现该方法，hive相关的基本都没有
+        }
         Map<String, Object> data = new HashMap<>();
         for (String columnName : columnNames) {
           Object columnValue = resultSet.getObject(columnName);
@@ -303,6 +315,12 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
           setCompletePollOk(true);
         }
         nowRowSetEmpty = true;
+        try {
+          resultSet.close();
+          connection.close();
+        } catch (Exception e) {
+          log.error("回收数据库连接失败", e);
+        }
         break;
       }
     }
