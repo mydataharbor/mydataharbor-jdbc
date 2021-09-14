@@ -23,7 +23,4 @@ public class JdbcSinkConfig extends AbstractConfig {
   @MyDataHarborMarker(title = "任务创建时和数据库的连接数", defaultValue = "1")
   private Integer initialSize = 1;
 
-  @MyDataHarborMarker(title = "默认目标表")
-  private String defaultTableName;
-
 }
