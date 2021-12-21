@@ -23,4 +23,7 @@ public class JdbcSinkConfig extends AbstractConfig {
   @MyDataHarborMarker(title = "任务创建时和数据库的连接数", defaultValue = "1")
   private Integer initialSize = 1;
 
+  @MyDataHarborMarker(title = "只有当写入数据库时发生IOException时才回滚",des = "默认true，如果为false，则当写入数据库发生任何异常时都回滚重试。")
+  private Boolean onlyOnIOExceptionRollback = true;
+
 }

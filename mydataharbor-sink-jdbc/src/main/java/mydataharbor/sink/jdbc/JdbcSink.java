@@ -98,10 +98,12 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
       dataSourceTransactionManager.commit(status);
     } catch (Exception e) {
       log.error("写入数据时发生异常", e);
-      dataSourceTransactionManager.rollback(status);
-      throw new ResetException("写入数据时发生异常：" + e.getMessage());
+      if (jdbcSinkConfig.getOnlyOnIOExceptionRollback() == false || e instanceof IOException) {
+        dataSourceTransactionManager.rollback(status);
+        throw new ResetException("写入数据时发生异常：" + e.getMessage());
+      }
     }
-    return WriterResult.builder().success(true).commit(true).msg("写入成功").build();
+    return WriterResult.builder().success(true).commit(true).msg("ok").build();
   }
 
   private Map<String, List<Object[]>> process(JdbcSinkReq record) {
@@ -214,8 +216,10 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
       dataSourceTransactionManager.commit(status);
     } catch (Exception e) {
       log.error("写入数据时发生异常", e);
-      dataSourceTransactionManager.rollback(status);
-      throw new ResetException("写入数据时发生异常：" + e.getMessage());
+      if (jdbcSinkConfig.getOnlyOnIOExceptionRollback() == false || e instanceof IOException) {
+        dataSourceTransactionManager.rollback(status);
+        throw new ResetException("写入数据时发生异常：" + e.getMessage());
+      }
     }
     return WriterResult.builder().success(true).commit(true).msg("ok").writeReturn(result).build();
   }
