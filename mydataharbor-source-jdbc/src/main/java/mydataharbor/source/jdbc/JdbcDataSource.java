@@ -355,6 +355,8 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
       synchronized (tmp) {
         tmp.removeAll((Collection<?>) records);
       }
+    } else {
+      records.forEach(jdbcResult -> commit(jdbcResult, settingContext));
     }
   }
 
