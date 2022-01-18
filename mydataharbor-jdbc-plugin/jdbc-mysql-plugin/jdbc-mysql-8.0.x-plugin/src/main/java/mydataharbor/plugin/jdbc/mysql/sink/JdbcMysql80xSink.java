@@ -1,5 +1,6 @@
 package mydataharbor.plugin.jdbc.mysql.sink;
 
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import mydataharbor.sink.jdbc.JdbcSink;
 import mydataharbor.sink.jdbc.JdbcSinkReq;
 import mydataharbor.sink.jdbc.config.JdbcSinkConfig;
@@ -9,6 +10,7 @@ import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
 /**
  * Created by xulang on 2021/8/19.
  */
+@MyDataHarborMarker(title = "mysql8.0.x数据源")
 public class JdbcMysql80xSink extends JdbcSink {
 
   public JdbcMysql80xSink(JdbcSinkConfig jdbcSinkConfig) {
