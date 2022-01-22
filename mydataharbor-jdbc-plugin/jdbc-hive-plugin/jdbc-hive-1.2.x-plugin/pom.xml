@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.mydataharbor</groupId>
 		<artifactId>jdbc-hive-plugin</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2</version>
 	</parent>
 	<artifactId>jdbc-hive-1.2.x-plugin</artifactId>
 
