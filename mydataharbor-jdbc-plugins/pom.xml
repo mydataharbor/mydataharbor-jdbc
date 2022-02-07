@@ -5,13 +5,13 @@
   <parent>
     <artifactId>mydataharbor-plugin-plugins</artifactId>
     <groupId>com.mydataharbor</groupId>
-    <version>1.0.3-RELEASE</version>
+    <version>1.0.4</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <version>1.1.2</version>
   <packaging>pom</packaging>
 
-  <artifactId>mydataharbor-jdbc-plugin</artifactId>
+  <artifactId>mydataharbor-jdbc-plugins</artifactId>
 
   <properties>
     <plugin.version>${project.version}</plugin.version>
@@ -21,6 +21,7 @@
     <module>jdbc-mysql-plugin</module>
     <module>jdbc-oracle-plugin</module>
     <module>jdbc-hive-plugin</module>
+    <module>jdbc-plugin</module>
   </modules>
 
   <dependencies>
@@ -28,11 +29,13 @@
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-source-jdbc</artifactId>
       <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-sink-jdbc</artifactId>
       <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>

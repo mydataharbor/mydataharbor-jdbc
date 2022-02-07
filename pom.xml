@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>mydataharbor-plugin</artifactId>
-    <version>1.0.3-RELEASE</version>
+    <version>1.0.4</version>
   </parent>
   <artifactId>mydataharbor-jdbc</artifactId>
   <packaging>pom</packaging>
@@ -18,10 +18,9 @@
   </properties>
 
   <modules>
-
     <module>mydataharbor-source-jdbc</module>
     <module>mydataharbor-sink-jdbc</module>
-    <module>mydataharbor-jdbc-plugin</module>
+    <module>mydataharbor-jdbc-plugins</module>
   </modules>
 
   <licenses>
