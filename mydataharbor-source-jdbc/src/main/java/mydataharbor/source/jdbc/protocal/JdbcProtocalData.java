@@ -2,6 +2,7 @@ package mydataharbor.source.jdbc.protocal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import mydataharbor.IProtocalData;
 import mydataharbor.source.jdbc.JdbcResult;
 
@@ -10,6 +11,7 @@ import mydataharbor.source.jdbc.JdbcResult;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class JdbcProtocalData implements IProtocalData {
 
   private JdbcResult jdbcResult;

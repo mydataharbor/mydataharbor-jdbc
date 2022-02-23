@@ -29,7 +29,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
 
   private BasicDataSource dataSource;
 
-  private JdbcTemplate jdbcTemplate;
+  protected JdbcTemplate jdbcTemplate;
 
   private JdbcSinkConfig jdbcSinkConfig;
 
@@ -98,10 +98,14 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
       dataSourceTransactionManager.commit(status);
     } catch (Exception e) {
       log.error("写入数据时发生异常", e);
-      dataSourceTransactionManager.rollback(status);
-      throw new ResetException("写入数据时发生异常：" + e.getMessage());
+      if (jdbcSinkConfig.getOnlyOnIOExceptionRollback() == false || e instanceof IOException) {
+        dataSourceTransactionManager.rollback(status);
+        throw new ResetException("写入数据时发生异常：" + e.getMessage());
+      } else {
+        return WriterResult.builder().success(false).commit(true).msg(e.getMessage()).build();
+      }
     }
-    return WriterResult.builder().success(true).commit(true).msg("写入成功").build();
+    return WriterResult.builder().success(true).commit(true).msg("ok").build();
   }
 
   private Map<String, List<Object[]>> process(JdbcSinkReq record) {
@@ -154,24 +158,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
             executeValues = whereValues;
             break;
           case SAVE:
-            sql.append("UPDATE ");
-            sql.append(writeDataInfo.getTableName());
-            sql.append(" SET ");
-            sql.append(updateColumnNames);
-            if (whereValues.length > 0) {
-              sql.append(whereSql.toString());
-            }
-            int upset = jdbcTemplate.update(sql.toString(), concat(values, whereValues));
-            if (upset == 0) {
-              sql = new StringBuilder();
-              sql.append("INSERT INTO ");
-              sql.append(writeDataInfo.getTableName());
-              sql.append(" ");
-              sql.append(insertColumnNames);
-              sql.append(" VALUES ");
-              sql.append(valuePlaceholder);
-              executeValues = values;
-            }
+            executeValues = generateSave(writeDataInfo, insertColumnNames, updateColumnNames, valuePlaceholder, values, whereSql, whereValues, sql);
             break;
         }
         if (executeValues != null) {
@@ -188,6 +175,41 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
       throw e;
     }
     return res;
+  }
+
+  /**
+   *  save情况下如何执行sql
+   * @param writeDataInfo
+   * @param insertColumnNames
+   * @param updateColumnNames
+   * @param valuePlaceholder
+   * @param values
+   * @param whereSql
+   * @param whereValues
+   * @param sql
+   * @param executeValues
+   * @return
+   */
+  public Object[] generateSave(JdbcSinkReq.WriteDataInfo writeDataInfo, String insertColumnNames, String updateColumnNames, String valuePlaceholder, Object[] values, StringBuilder whereSql, Object[] whereValues, StringBuilder sql) {
+    sql.append("UPDATE ");
+    sql.append(writeDataInfo.getTableName());
+    sql.append(" SET ");
+    sql.append(updateColumnNames);
+    if (whereValues.length > 0) {
+      sql.append(whereSql.toString());
+    }
+    int upset = jdbcTemplate.update(sql.toString(), concat(values, whereValues));
+    if (upset == 0) {
+      sql.setLength(0);
+      sql.append("INSERT INTO ");
+      sql.append(writeDataInfo.getTableName());
+      sql.append(" ");
+      sql.append(insertColumnNames);
+      sql.append(" VALUES ");
+      sql.append(valuePlaceholder);
+      return values;
+    }
+    return null;
   }
 
   @Override
@@ -214,8 +236,12 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
       dataSourceTransactionManager.commit(status);
     } catch (Exception e) {
       log.error("写入数据时发生异常", e);
-      dataSourceTransactionManager.rollback(status);
-      throw new ResetException("写入数据时发生异常：" + e.getMessage());
+      if (jdbcSinkConfig.getOnlyOnIOExceptionRollback() == false || e instanceof IOException) {
+        dataSourceTransactionManager.rollback(status);
+        throw new ResetException("写入数据时发生异常：" + e.getMessage());
+      } else {
+        return WriterResult.builder().success(false).commit(true).msg(e.getMessage()).build();
+      }
     }
     return WriterResult.builder().success(true).commit(true).msg("ok").writeReturn(result).build();
   }

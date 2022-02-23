@@ -4,12 +4,12 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>mydataharbor-plugin</artifactId>
-    <version>1.0.3-RELEASE</version>
+    <version>1.0.4</version>
   </parent>
   <artifactId>mydataharbor-jdbc</artifactId>
   <packaging>pom</packaging>
   <description>jdbc相关</description>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,10 +18,9 @@
   </properties>
 
   <modules>
-
     <module>mydataharbor-source-jdbc</module>
     <module>mydataharbor-sink-jdbc</module>
-    <module>mydataharbor-jdbc-plugin</module>
+    <module>mydataharbor-jdbc-plugins</module>
   </modules>
 
   <licenses>
