@@ -1,7 +1,7 @@
 package mydataharbor.plugin.jdbc.oracle.source;
 
 import mydataharbor.source.jdbc.JdbcDataSource;
-import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
+import mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig;
 
 /**
  * Created by xulang on 2021/8/19.
@@ -19,6 +19,6 @@ public class JdbcOracle196DataSource extends JdbcDataSource {
 
   @Override
   public String dataSourceType() {
-    return super.dataSourceType() + "ojdbc8-21.1.x";
+    return super.dataSourceType() + "ojdbc8-19.6.x";
   }
 }

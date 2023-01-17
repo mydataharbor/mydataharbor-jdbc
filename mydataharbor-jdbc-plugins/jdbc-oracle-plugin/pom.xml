@@ -4,7 +4,7 @@
   <parent>
     <artifactId>mydataharbor-jdbc-plugins</artifactId>
     <groupId>com.mydataharbor</groupId>
-    <version>1.1.2</version>
+    <version>${revision}</version>
   </parent>
   <artifactId>jdbc-oracle-plugin</artifactId>
   <packaging>pom</packaging>
@@ -16,6 +16,7 @@
     </plugin.group.logo>
   </properties>
   <modules>
+    <module>jdbc-oracle-ojdbc8-19.3-plugin</module>
     <module>jdbc-oracle-ojdbc8-19.8-plugin</module>
     <module>jdbc-oracle-ojdbc8-19.7-plugin</module>
     <module>jdbc-oracle-ojdbc8-19.6-plugin</module>
