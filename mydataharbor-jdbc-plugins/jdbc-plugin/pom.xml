@@ -23,12 +23,12 @@
   <dependencies>
     <dependency>
       <groupId>com.mydataharbor</groupId>
-      <artifactId>mydataharbor-source-jdbc</artifactId>
+      <artifactId>mydataharbor-jdbc-source</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.mydataharbor</groupId>
-      <artifactId>mydataharbor-sink-jdbc</artifactId>
+      <artifactId>mydataharbor-jdbc-sink</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
