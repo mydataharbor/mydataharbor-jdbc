@@ -1,9 +1,7 @@
 package mydataharbor.plugin.jdbc.oracle.sink;
 
 import mydataharbor.sink.jdbc.JdbcSink;
-import mydataharbor.sink.jdbc.config.JdbcSinkConfig;
-import mydataharbor.source.jdbc.JdbcDataSource;
-import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
+import mydataharbor.common.jdbc.sink.config.JdbcSinkConfig;
 
 /**
  * Created by xulang on 2021/8/19.

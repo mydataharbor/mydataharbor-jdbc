@@ -4,23 +4,25 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>mydataharbor-plugin</artifactId>
-    <version>1.0.4</version>
+    <version>2.0.0</version>
   </parent>
   <artifactId>mydataharbor-jdbc</artifactId>
   <packaging>pom</packaging>
   <description>jdbc相关</description>
-  <version>1.1.2</version>
+  <version>${revision}</version>
 
   <properties>
+    <revision>2.0.0</revision>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <modules>
-    <module>mydataharbor-source-jdbc</module>
-    <module>mydataharbor-sink-jdbc</module>
+    <module>mydataharbor-jdbc-source</module>
+    <module>mydataharbor-jdbc-sink</module>
     <module>mydataharbor-jdbc-plugins</module>
+    <module>mydataharbor-jdbc-common</module>
   </modules>
 
   <licenses>
@@ -32,11 +34,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>org.apache.kafka</groupId>
-        <artifactId>kafka-clients</artifactId>
-        <version>2.6.0</version>
-      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>

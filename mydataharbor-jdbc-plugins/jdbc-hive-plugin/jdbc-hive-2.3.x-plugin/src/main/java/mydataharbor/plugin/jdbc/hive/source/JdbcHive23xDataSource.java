@@ -1,7 +1,7 @@
 package mydataharbor.plugin.jdbc.hive.source;
 
 import mydataharbor.source.jdbc.JdbcDataSource;
-import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
+import mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig;
 
 /**
  * Created by xulang on 2021/8/19.
