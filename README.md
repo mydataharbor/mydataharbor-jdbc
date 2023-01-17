@@ -13,7 +13,7 @@ jdbc抽取数据有三种模式，全量/增量/先全量再增量 ，❗ 此种
 
 | 中间件/协议 | 数据源（DataSource）                                         | 写入源（Sink）                                          |
 | ----------- | ------------------------------------------------------------ | ------------------------------------------------------- |
-| jdbc        | ✅mysql全部版本<br>✅oracle全部版本 <br>✅hive全部版本 <br>PostgrcSQL计划中 | ✅mysql全部版本 <br>✅oracle全部版本 <br>PostgrcSQL计划中 |
+| jdbc        | ✅mysql全部版本<br>✅oracle全部版本 <br>✅hive全部版本 <br>✅PostgreSQL<br>✅clickhouse | ✅mysql全部版本 <br>✅oracle全部版本 <br>✅PostgreSQL <br>✅clickhouse|
 
 # 配置
 
@@ -48,4 +48,8 @@ jdbc抽取数据有三种模式，全量/增量/先全量再增量 ，❗ 此种
     "defaultTableName": ""
   }
 ```
+## 更新记录
+### 2.0.0
+1、offset数据持久化，数据源bug修复，只能运行在2.x的主程序上
+2、新增clickhouse和postgresql类型的驱动
 

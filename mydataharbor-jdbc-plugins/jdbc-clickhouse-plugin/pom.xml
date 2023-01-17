@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>mydataharbor-jdbc-plugins</artifactId>
+        <groupId>com.mydataharbor</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>jdbc-clickhouse-plugin</artifactId>
+
+    <packaging>pom</packaging>
+
+    <description>clickhouse的jdbc插适配，允许用户通过jdbc协议抽取或者写入clickhouse</description>
+
+    <properties>
+        <plugin.group>jdbc-clickhouse</plugin.group>
+        <plugin.group.logo>data:image/webp;base64,UklGRhYCAABXRUJQVlA4TAkCAAAvM8AMALfjIJJkV5l59z85gxkMoRwR+dYGxLaRHEkccy7/bO/+W64jyVaVnXMe7g5REAbxEwXf7pyd/yANgyVJliyZu7gAuAQFFtb/1iPJUHpAAELIksGSJBvnzwUX1OaCC+6v1R0zLErWJttPzyilMITldFSpSkK9J+bzdvvOzP9d98/J01GUD3mQIhKJBEEAAJJ/KAlIQo0mARSWMY0CF1KgRAkIiWINAJCk0Mqow9qYtsUL7Le6pjbgz5gH1g/rL/7irz19nJ0VicLC3svKwUFC/lP/p9mOS2A9YfH+MkC0bVtV8s6jL9h024Vd91E2dneStj6b/x+jsdtzIvqvyG3bhulep/QTAaKgFAVEBjIPB0I8DUwEQ0oKEqYMIDJI81AgzGVgkBvfocSseA2NviwTT+3q5OiY6Kkdcj8iPrWYFA4SPbWolFl52zzPked56Hly6Xly9m37g58fRHQ6FH9q54gXZ5cl8RZjALF/sK/UZmyykM6O9kZfl1lpqnTLM3trw7P3bmY1OlORlQ0pWesWtZY0X9yZ5zeealDZ3WBUGhUt1NBc3+MBYiTz5UBo+86jq4Hyg9XgwmjC4cmajM+F+S1UKMGDiORFX2tTm9CrBqMGr6d2J0LTj0ZmRFcqsrQu7VcZRY3lgY9sbWY1aosK0KgEAbFO6C60bFGXck1twxxP+9AzQQA=</plugin.group.logo>
+        <plugin.dependencies>jdbc-plugin</plugin.dependencies>
+    </properties>
+
+    <modules>
+        <module>jdbc-clickhouse-0.1.x-plugin</module>
+        <module>jdbc-clickhouse-0.2.x-plugin</module>
+        <module>jdbc-clickhouse-0.3.x-plugin</module>
+    </modules>
+
+
+</project>
