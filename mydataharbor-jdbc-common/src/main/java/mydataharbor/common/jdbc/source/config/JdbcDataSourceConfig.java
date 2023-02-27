@@ -51,4 +51,8 @@ public class JdbcDataSourceConfig extends RateLimitConfig {
 
   @MyDataHarborMarker(title = "每次增量的休息时间",des = "涉及增量拉取的情况下生效，防止没有数据空转，默认500ms！",defaultValue = "500")
   private Long sleepTimeOnIncrement = 500L;
+
+  @MyDataHarborMarker(title = "数据延迟时间",des = "单位：秒，默认3秒，数据最早3秒可以获取到，该值设置的太小会导致更新很近的数据无法获取到，导致数据丢失！",defaultValue = "3")
+  private Integer delaySecond = 3;
+
 }
