@@ -33,6 +33,7 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -152,13 +153,13 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
 
     public Object getNowTime() {
         if (dateFormat != null) {
-            return new Date();
+            return DateUtils.addSeconds(new Date(), -1 * jdbcDataSourceConfig.getDelaySecond());
         }
         else if (SECOND.equals(jdbcDataSourceConfig.getTimeFormat())) {
-            return System.currentTimeMillis() / 1000;
+            return System.currentTimeMillis() / 1000 - jdbcDataSourceConfig.getDelaySecond();
         }
         else {
-            return System.currentTimeMillis();
+            return System.currentTimeMillis() - jdbcDataSourceConfig.getDelaySecond()*1000;
         }
     }
 
