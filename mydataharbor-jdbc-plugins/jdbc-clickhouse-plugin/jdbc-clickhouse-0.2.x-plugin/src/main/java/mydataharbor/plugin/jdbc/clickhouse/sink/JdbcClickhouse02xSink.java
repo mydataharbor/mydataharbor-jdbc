@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * Created by xulang on 2021/8/19.
  */
-@MyDataHarborMarker(title = "clickhouse-0.2.x写入源")
+@MyDataHarborMarker(title = "clickhouse-0.2.x输出源")
 public class JdbcClickhouse02xSink extends JdbcSink {
 
   public JdbcClickhouse02xSink(JdbcSinkConfig jdbcSinkConfig) {

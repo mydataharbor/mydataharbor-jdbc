@@ -1,11 +1,13 @@
 package mydataharbor.plugin.jdbc.hive.source;
 
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import mydataharbor.plugin.jdbc.source.JdbcDataSource;
 import mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig;
 
 /**
  * Created by xulang on 2021/8/19.
  */
+@MyDataHarborMarker(title = "hive-3.1.x输入源")
 public class JdbcHive31xDataSource extends JdbcDataSource {
 
   public JdbcHive31xDataSource(JdbcDataSourceConfig jdbcDataSourceConfig) {
