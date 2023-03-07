@@ -7,7 +7,7 @@ import mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig;
 /**
  * Created by xulang on 2021/8/19.
  */
-@MyDataHarborMarker(title = "clickhouse-0.3.x数据源")
+@MyDataHarborMarker(title = "clickhouse-0.3.x输入源")
 public class JdbcClickhouse03xDataSource extends JdbcDataSource {
 
   public JdbcClickhouse03xDataSource(JdbcDataSourceConfig jdbcDataSourceConfig) {

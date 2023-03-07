@@ -7,7 +7,7 @@ import mydataharbor.plugin.jdbc.sink.JdbcSink;
 /**
  * Created by xulang on 2021/8/19.
  */
-@MyDataHarborMarker(title = "postgresql9.4.x数据源")
+@MyDataHarborMarker(title = "postgresql9.4.x输出源")
 public class JdbcPostgresql94xSink extends JdbcSink {
 
   public JdbcPostgresql94xSink(JdbcSinkConfig jdbcSinkConfig) {

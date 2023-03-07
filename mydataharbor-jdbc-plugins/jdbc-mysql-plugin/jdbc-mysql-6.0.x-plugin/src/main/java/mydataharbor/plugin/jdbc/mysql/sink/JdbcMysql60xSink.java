@@ -8,7 +8,7 @@ import mydataharbor.common.jdbc.sink.config.JdbcSinkConfig;
 /**
  * Created by xulang on 2021/8/19.
  */
-@MyDataHarborMarker(title = "mysql6.0.x数据源")
+@MyDataHarborMarker(title = "mysql6.0.x输出源")
 public class JdbcMysql60xSink extends JdbcSink {
 
   public JdbcMysql60xSink(JdbcSinkConfig jdbcSinkConfig) {

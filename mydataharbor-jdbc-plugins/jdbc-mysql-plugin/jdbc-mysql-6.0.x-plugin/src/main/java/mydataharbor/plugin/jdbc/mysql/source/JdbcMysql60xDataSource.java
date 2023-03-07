@@ -7,7 +7,7 @@ import mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig;
 /**
  * Created by xulang on 2021/8/19.
  */
-@MyDataHarborMarker(title = "mysql6.0.x输出源")
+@MyDataHarborMarker(title = "mysql6.0.x输入源")
 public class JdbcMysql60xDataSource extends JdbcDataSource {
 
   public JdbcMysql60xDataSource(JdbcDataSourceConfig jdbcDataSourceConfig) {
