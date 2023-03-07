@@ -1,7 +1,7 @@
 package mydataharbor.plugin.jdbc.clickhouse.source;
 
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
-import mydataharbor.source.jdbc.JdbcDataSource;
+import mydataharbor.plugin.jdbc.source.JdbcDataSource;
 import mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig;
 
 /**

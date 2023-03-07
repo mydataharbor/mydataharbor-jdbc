@@ -1,6 +1,6 @@
 package mydataharbor.plugin.jdbc.hive.source;
 
-import mydataharbor.source.jdbc.JdbcDataSource;
+import mydataharbor.plugin.jdbc.source.JdbcDataSource;
 import mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig;
 
 /**

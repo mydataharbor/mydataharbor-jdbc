@@ -1,7 +1,7 @@
 package mydataharbor.plugin.jdbc.mysql.sink;
 
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
-import mydataharbor.sink.jdbc.JdbcSink;
+import mydataharbor.plugin.jdbc.sink.JdbcSink;
 import mydataharbor.common.jdbc.sink.JdbcSinkReq;
 import mydataharbor.common.jdbc.sink.config.JdbcSinkConfig;
 

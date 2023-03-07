@@ -3,7 +3,7 @@ package mydataharbor.plugin.jdbc.clickhouse.sink;
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import mydataharbor.exception.ResetException;
 import mydataharbor.setting.BaseSettingContext;
-import mydataharbor.sink.jdbc.JdbcSink;
+import mydataharbor.plugin.jdbc.sink.JdbcSink;
 import mydataharbor.common.jdbc.sink.JdbcSinkReq;
 import mydataharbor.common.jdbc.sink.config.JdbcSinkConfig;
 

@@ -1,4 +1,4 @@
-package mydataharbor.source.jdbc;
+package mydataharbor.plugin.jdbc.source;
 
 import static mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig.MILLI_SECOND;
 import static mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig.SECOND;

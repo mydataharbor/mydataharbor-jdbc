@@ -1,4 +1,4 @@
-package mydataharbor.sink.jdbc;
+package mydataharbor.plugin.jdbc.sink;
 
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.IDataSink;

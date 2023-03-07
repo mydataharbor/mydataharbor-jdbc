@@ -1,9 +1,8 @@
 package mydataharbor.plugin.jdbc.postgresql.sink;
 
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
-import mydataharbor.common.jdbc.sink.JdbcSinkReq;
 import mydataharbor.common.jdbc.sink.config.JdbcSinkConfig;
-import mydataharbor.sink.jdbc.JdbcSink;
+import mydataharbor.plugin.jdbc.sink.JdbcSink;
 
 /**
  * Created by xulang on 2021/8/19.

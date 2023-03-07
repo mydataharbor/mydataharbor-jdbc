@@ -1,4 +1,4 @@
-package mydataharbor.source.jdbc.protocol;
+package mydataharbor.plugin.jdbc.source.protocol;
 
 import mydataharbor.IProtocolDataConverter;
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
