@@ -1,11 +1,13 @@
 package mydataharbor.plugin.jdbc.oracle.sink;
 
-import mydataharbor.sink.jdbc.JdbcSink;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
+import mydataharbor.plugin.jdbc.sink.JdbcSink;
 import mydataharbor.common.jdbc.sink.config.JdbcSinkConfig;
 
 /**
  * Created by xulang on 2021/8/19.
  */
+@MyDataHarborMarker(title = "Oracle19.3.x输出源")
 public class JdbcOracle193Sink extends JdbcSink {
 
   public JdbcOracle193Sink(JdbcSinkConfig jdbcSinkConfig) {

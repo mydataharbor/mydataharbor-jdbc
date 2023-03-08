@@ -8,7 +8,7 @@
   </parent>
 
   <artifactId>mydataharbor-jdbc-source</artifactId>
-  <description>jdbc数据源</description>
+  <description>jdbc输入源</description>
 
   <dependencies>
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->

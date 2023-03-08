@@ -1,14 +1,14 @@
 package mydataharbor.plugin.jdbc.mysql.sink;
 
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
-import mydataharbor.sink.jdbc.JdbcSink;
+import mydataharbor.plugin.jdbc.sink.JdbcSink;
 import mydataharbor.common.jdbc.sink.JdbcSinkReq;
 import mydataharbor.common.jdbc.sink.config.JdbcSinkConfig;
 
 /**
  * Created by xulang on 2021/8/19.
  */
-@MyDataHarborMarker(title = "mysql5.1.x数据源")
+@MyDataHarborMarker(title = "mysql5.1.x输出源")
 public class JdbcMysql51xSink extends JdbcSink {
 
   public JdbcMysql51xSink(JdbcSinkConfig jdbcSinkConfig) {

@@ -1,4 +1,4 @@
-package mydataharbor.sink.jdbc;
+package mydataharbor.plugin.jdbc.sink;
 
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.IDataSink;
@@ -64,7 +64,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
             jdbcTemplate = new JdbcTemplate(dataSource);
         }
         catch (Exception e) {
-            throw new JdbcDataSourceCreateException("创建jdbc数据源失败！:" + e.getMessage(), e);
+            throw new JdbcDataSourceCreateException("创建jdbc输出源失败！:" + e.getMessage(), e);
         }
     }
 
@@ -91,7 +91,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
                 dataSource.close();
             }
             catch (SQLException throwables) {
-                log.error("关闭数据源失败！", throwables);
+                log.error("关闭输出源失败！", throwables);
             }
         }
     }

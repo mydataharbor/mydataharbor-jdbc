@@ -14,7 +14,7 @@
   <artifactId>mydataharbor-jdbc-plugins</artifactId>
 
   <properties>
-    <revision>2.0.1</revision>
+    <revision>2.0.2</revision>
     <plugin.version>${project.version}</plugin.version>
   </properties>
 

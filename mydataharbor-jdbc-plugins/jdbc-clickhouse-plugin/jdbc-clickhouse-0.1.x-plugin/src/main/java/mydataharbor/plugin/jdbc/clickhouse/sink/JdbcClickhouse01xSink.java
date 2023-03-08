@@ -3,7 +3,7 @@ package mydataharbor.plugin.jdbc.clickhouse.sink;
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import mydataharbor.exception.ResetException;
 import mydataharbor.setting.BaseSettingContext;
-import mydataharbor.sink.jdbc.JdbcSink;
+import mydataharbor.plugin.jdbc.sink.JdbcSink;
 import mydataharbor.common.jdbc.sink.JdbcSinkReq;
 import mydataharbor.common.jdbc.sink.config.JdbcSinkConfig;
 
@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * Created by xulang on 2021/8/19.
  */
-@MyDataHarborMarker(title = "clickhouse0.1.x写入源")
+@MyDataHarborMarker(title = "clickhouse0.1.x输出源")
 public class JdbcClickhouse01xSink extends JdbcSink {
 
   public JdbcClickhouse01xSink(JdbcSinkConfig jdbcSinkConfig) {

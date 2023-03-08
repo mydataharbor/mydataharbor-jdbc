@@ -1,4 +1,4 @@
-package mydataharbor.source.jdbc;
+package mydataharbor.plugin.jdbc.source;
 
 import static mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig.MILLI_SECOND;
 import static mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig.SECOND;
@@ -38,7 +38,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 /**
- * jdbc 数据源
+ * jdbc 输入源
  * 全量中断必须从头开始，因为全量考虑性能没有order by
  * 增量模式下，宕机重启，可以从断开处继续拉数据
  * Created by xulang on 2021/8/18.
@@ -99,7 +99,7 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
             connection = dataSource.getConnection();
         }
         catch (Exception e) {
-            throw new JdbcDataSourceCreateException("创建jdbc数据源失败！:" + e.getMessage(), e);
+            throw new JdbcDataSourceCreateException("创建jdbc输入源失败！:" + e.getMessage(), e);
         }
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         if (jdbcDataSourceConfig.getModel() == JdbcSyncModel.INCREMENT || jdbcDataSourceConfig.getModel() == JdbcSyncModel.INCREMENT_AFTER_COMPLETE) {
@@ -378,7 +378,7 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
                 dataSource.close();
             }
             catch (SQLException throwables) {
-                log.error("关闭数据源失败！", throwables);
+                log.error("关闭输入源失败！", throwables);
             }
         }
     }

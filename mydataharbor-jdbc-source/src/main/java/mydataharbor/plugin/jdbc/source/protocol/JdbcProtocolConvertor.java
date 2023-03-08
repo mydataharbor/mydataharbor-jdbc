@@ -1,4 +1,4 @@
-package mydataharbor.source.jdbc.protocol;
+package mydataharbor.plugin.jdbc.source.protocol;
 
 import mydataharbor.IProtocolDataConverter;
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
@@ -10,7 +10,7 @@ import mydataharbor.setting.BaseSettingContext;
 /**
  * Created by xulang on 2021/8/22.
  */
-@MyDataHarborMarker(title = "jdbc数据源默认协议数据转换器")
+@MyDataHarborMarker(title = "jdbc输入源默认协议数据转换器")
 public class JdbcProtocolConvertor implements IProtocolDataConverter<JdbcResult, JdbcProtocolData, BaseSettingContext> {
   @Override
   public JdbcProtocolData convert(JdbcResult record, BaseSettingContext settingContext) throws ResetException {
