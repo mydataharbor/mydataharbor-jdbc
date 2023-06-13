@@ -48,8 +48,6 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
 
     private BasicDataSource dataSource;
 
-    private Connection connection;
-
     private JdbcTemplate jdbcTemplate;
 
     private JdbcDataSourceConfig jdbcDataSourceConfig;
@@ -64,7 +62,7 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
     /**
      * 当前结果集是否到头
      */
-    private boolean nowRowSetEmpty;
+    private volatile boolean nowRowSetEmpty;
 
     private List<JdbcResult> tmp = new CopyOnWriteArrayList<>();
 
@@ -95,11 +93,11 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
         connectionProps.put("initialSize", jdbcDataSourceConfig.getInitialSize());
         try {
             dataSource = BasicDataSourceFactory.createDataSource(connectionProps);
+            dataSource.setMaxWaitMillis(5000L);
             dataSource.start();
-            connection = dataSource.getConnection();
         }
         catch (Exception e) {
-            throw new JdbcDataSourceCreateException("创建jdbc输入源失败！:" + e.getMessage(), e);
+            throw new JdbcDataSourceCreateException("创建jdbc数据源失败！:" + e.getMessage(), e);
         }
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         if (jdbcDataSourceConfig.getModel() == JdbcSyncModel.INCREMENT || jdbcDataSourceConfig.getModel() == JdbcSyncModel.INCREMENT_AFTER_COMPLETE) {
@@ -159,7 +157,7 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
             return System.currentTimeMillis() / 1000 - jdbcDataSourceConfig.getDelaySecond();
         }
         else {
-            return System.currentTimeMillis() - jdbcDataSourceConfig.getDelaySecond()*1000;
+            return System.currentTimeMillis() - jdbcDataSourceConfig.getDelaySecond() * 1000;
         }
     }
 
@@ -215,14 +213,17 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
         try {
             tmp = getResults(resultSet);
         }
-        catch (SQLException throwables) {
+        catch (Exception e) {
             preResultSet = null;//下一次重新生成
-            throw new RuntimeException("抽取数据发生异常：" + throwables.getMessage(), throwables);
+            countDownLatch.countDown();//释放当前结果集和连接
+            throw new RuntimeException("抽取数据发生异常：" + e.getMessage(), e);
         }
         return tmp;
     }
 
     private ResultSet queryForResultSet(String querySql, Object... args) {
+        if (this.countDownLatch != null && this.countDownLatch.getCount() > 0)
+            this.countDownLatch.countDown();
         this.countDownLatch = new CountDownLatch(1);
         QueryForResultSet queryForResultSet = new QueryForResultSet(querySql, args);
         queryForResultSet.start();
@@ -298,16 +299,10 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
                 count++;
             }
             else {
+                nowRowSetEmpty = true;
+                countDownLatch.countDown();//关闭结果集
                 if (!completePollOk) {
                     setCompletePollOk(true);
-                }
-                nowRowSetEmpty = true;
-                try {
-                    countDownLatch.countDown();//关闭结果集
-                    connection.close();//归还连接给连接池
-                }
-                catch (Exception e) {
-                    log.error("回收数据库连接失败", e);
                 }
                 break;
             }
@@ -378,7 +373,7 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
                 dataSource.close();
             }
             catch (SQLException throwables) {
-                log.error("关闭输入源失败！", throwables);
+                log.error("关闭数据源失败！", throwables);
             }
         }
     }
@@ -432,6 +427,9 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
         }
     }
 
+    public JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
 }
 
 
